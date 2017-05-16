@@ -52,8 +52,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String is_remember_user = read(Constant.SHARED_KEY.Key_IsRememberUser);
         if (is_remember_user.equalsIgnoreCase("true")) {
             isRemember = true;
+            imgCheck.setImageResource(R.drawable.checked);
         } else {
             isRemember = false;
+            imgCheck.setImageResource(R.drawable.unchecked);
         }
 
     }

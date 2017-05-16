@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
@@ -165,11 +166,18 @@ public class HomeActivity extends FragmentActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (position != 0) {
-                        selectedPosition = position;
 
-                        displayView(selectedPosition);
+                    selectedPosition = position;
+
+                    switch (position) {
+                        case 0:
+                            logout();
+                            break;
+                        default:
+                            displayView(position);
+                            break;
                     }
+
                 }
             });
 
@@ -180,9 +188,19 @@ public class HomeActivity extends FragmentActivity {
     }
 
 
+    private void logout() {
+        mDrawerList.setItemChecked(0, true);
+        mDrawerList.setSelection(0);
+        mDrawerLayout.closeDrawer(mDrawerList);
+        mDrawerList.setAdapter(new MenuListAdapter(getApplicationContext(), listMenu, 0));
 
+        startActivity(LoginActivity.class);
 
+    }
 
+    protected void startActivity(Class klass) {
+        startActivity(new Intent(this, klass));
+    }
 
     protected void hideKeyboard() {
         View view = getCurrentFocus();
