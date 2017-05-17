@@ -31,6 +31,7 @@
                     android:background="@drawable/logo_sketch_idea"/>
 
                 <TextView
+                    android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -40,11 +41,41 @@
                     android:textSize="17sp"
                     android:text="If you have forgot the account password, you can reset your password. A new password will be sent to your email address."/>
 
+                <LinearLayout
+                    android:id="@+id/viewSuccess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:text="Password successfully reset." />
+
+                    <TextView
+                        android:id="@+id/tvSuccess"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:textAlignment="center"
+                        android:textSize="17sp"
+                        android:text="An e-mail has been send to test@test.com with further instructions."/>
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginTop="20dp"
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
@@ -53,11 +84,12 @@
                 <EditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="match_parent"
                     android:hint="e-mail address"
                     android:textColorHint="@color/gray_selected"
                     android:background="@drawable/textviewborder"
                     android:gravity="center_vertical"
+                    android:inputType="textEmailAddress"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
 
@@ -86,6 +118,23 @@
                         android:text="Reset"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/btnBackToLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/blue"
+                        android:text="Back to log-in screen" />
+                </LinearLayout>
 
             </RelativeLayout>
 
