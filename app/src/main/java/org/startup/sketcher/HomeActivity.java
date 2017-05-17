@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.startup.sketcher.fragment.AboutFragment;
 import org.startup.sketcher.fragment.HomeFragment;
 import org.startup.sketcher.util.Constant;
 import org.startup.sketcher.util.Util;
@@ -81,7 +82,9 @@ public class HomeActivity extends FragmentActivity {
             case 1:
                 fragment = HomeFragment.newInstance();
                 break;
-
+            case 2:
+                fragment = AboutFragment.newInstance();
+                break;
             default:
                 fragment = HomeFragment.newInstance();
                 break;
@@ -179,13 +182,11 @@ public class HomeActivity extends FragmentActivity {
                             displayView(position);
                             break;
                     }
-
                 }
             });
 
             return view;
         }
-
 
     }
 
