@@ -49,14 +49,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.rlCreate).setOnClickListener(this);
         findViewById(R.id.rlRemember).setOnClickListener(this);
 
-        String is_remember_user = read(Constant.SHARED_KEY.Key_IsRememberUser);
-        if (is_remember_user.equalsIgnoreCase("true")) {
-            isRemember = true;
-            imgCheck.setImageResource(R.drawable.checked);
-        } else {
-            isRemember = false;
-            imgCheck.setImageResource(R.drawable.unchecked);
-        }
+//        String is_remember_user = read(Constant.SHARED_KEY.Key_IsRememberUser);
+//        if (is_remember_user.equalsIgnoreCase("true")) {
+//            isRemember = true;
+//            imgCheck.setImageResource(R.drawable.checked);
+//        } else {
+//            isRemember = false;
+//            imgCheck.setImageResource(R.drawable.unchecked);
+//        }
 
     }
 
@@ -103,10 +103,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (isRemember) {
             imgCheck.setImageResource(R.drawable.checked);
-            write(Constant.SHARED_KEY.Key_IsRememberUser, "true");
         } else {
             imgCheck.setImageResource(R.drawable.unchecked);
-            write(Constant.SHARED_KEY.Key_IsRememberUser, "false");
         }
     }
 
@@ -182,8 +180,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     "</soapenv:Body>\n"+
                     "</soapenv:Envelope>";
 
-            //String soapmessage = String.format(envelope, username, password);
-            String soapmessage = String.format(envelope, "yasuodev", "k78gtqb");
+            String soapmessage = String.format(envelope, username, password);
 
             HttpPost httpPost = new HttpPost(url);
             StringEntity entity;
@@ -225,9 +222,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (isRemember) {
                         write(Constant.SHARED_KEY.Key_UserName, username);
                         write(Constant.SHARED_KEY.Key_Password, password);
+                        write(Constant.SHARED_KEY.Key_IsRememberUser, "true");
                     } else {
                         write(Constant.SHARED_KEY.Key_UserName, "");
                         write(Constant.SHARED_KEY.Key_Password, "");
+                        write(Constant.SHARED_KEY.Key_IsRememberUser, "false");
                     }
 
                     startActivity(HomeActivity.class);

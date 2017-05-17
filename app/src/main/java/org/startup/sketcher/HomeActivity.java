@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.startup.sketcher.fragment.HomeFragment;
+import org.startup.sketcher.util.Constant;
+import org.startup.sketcher.util.Util;
 
 import java.util.ArrayList;
 
@@ -194,8 +196,16 @@ public class HomeActivity extends FragmentActivity {
         mDrawerLayout.closeDrawer(mDrawerList);
         mDrawerList.setAdapter(new MenuListAdapter(getApplicationContext(), listMenu, 0));
 
-        startActivity(LoginActivity.class);
+        write(Constant.SHARED_KEY.Key_IsRememberUser, "false");
+        write(Constant.SHARED_KEY.Key_UserName, "");
+        write(Constant.SHARED_KEY.Key_Password, "");
+        write(Constant.SHARED_KEY.Key_UserID, "");
 
+        startActivity(LoginActivity.class);
+    }
+
+    protected void write(String key, String val) {
+        Util.WriteSharePreference(this, key, val);
     }
 
     protected void startActivity(Class klass) {

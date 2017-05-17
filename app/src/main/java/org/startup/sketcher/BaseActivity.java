@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.startup.sketcher.util.Util;
+
 import butterknife.ButterKnife;
 
 public class BaseActivity extends Activity {
@@ -34,11 +36,17 @@ public class BaseActivity extends Activity {
         return eTxt == null ? "" : eTxt.getText().toString().trim();
     }
 
-
     protected boolean isEmpty(String s) {
         return s == null || s.isEmpty();
     }
 
+    protected void write(String key, String val) {
+        Util.WriteSharePreference(this, key, val);
+    }
+
+    protected String read(String key) {
+        return Util.ReadSharePreference(this, key);
+    }
 
     protected void hideKeyboard() {
         // Check if no view has focus:
