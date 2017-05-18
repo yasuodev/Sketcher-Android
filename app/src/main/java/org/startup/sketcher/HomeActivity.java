@@ -37,13 +37,22 @@ public class HomeActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     @InjectView(R.id.list_slidermenu)
     ListView mDrawerList;
+    @InjectView(R.id.tvAboutTitle)
+    TextView tvAboutTitle;
+    @InjectView(R.id.rlMainTitle)
+    View rlMainTitle;
+    @InjectView(R.id.tvMainTitle)
+    TextView tvMainTitle;
+    @InjectView(R.id.rlMessage)
+    RelativeLayout rlMessage;
+    @InjectView(R.id.viewPopup)
+    View viewPopup;
 
     FragmentTransaction fragmentTransaction;
     Fragment fragment;
 
     ArrayList<String> listMenu = new ArrayList<String>();
     public static int selectedPosition = 1;
-    int currentpage = 0, totalpage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +76,38 @@ public class HomeActivity extends FragmentActivity {
         }
     }
 
+    @OnClick(R.id.rlMainTitle)
+    public void showPopup(View view) {
+        if (viewPopup.getVisibility() == View.GONE) {
+            viewPopup.setVisibility(View.VISIBLE);
+        } else {
+            viewPopup.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R.id.rlMostRecent)
+    public void onMostRecent(View view){
+        viewPopup.setVisibility(View.GONE);
+        tvMainTitle.setText("Most Recent");
+    }
+
+    @OnClick(R.id.rlAZ)
+    public void onAZ(View view) {
+        viewPopup.setVisibility(View.GONE);
+        tvMainTitle.setText("A-Z");
+    }
+
+    @OnClick(R.id.rlZA)
+    public void onZA(View view){
+        viewPopup.setVisibility(View.GONE);
+        tvMainTitle.setText("Z-A");
+    }
+
+    @OnClick(R.id.rlStarred)
+    public void onStarred(View view){
+        viewPopup.setVisibility(View.GONE);
+        tvMainTitle.setText("Starred");
+    }
 
     private void setMenuList() {
         listMenu.clear();
@@ -80,9 +121,17 @@ public class HomeActivity extends FragmentActivity {
         selectedPosition = position;
         switch (position) {
             case 1:
+                rlMainTitle.setVisibility(View.VISIBLE);
+                tvMainTitle.setText("Most Recent");
+                tvAboutTitle.setVisibility(View.GONE);
+                rlMessage.setVisibility(View.VISIBLE);
+
                 fragment = HomeFragment.newInstance();
                 break;
             case 2:
+                rlMainTitle.setVisibility(View.GONE);
+                tvAboutTitle.setVisibility(View.VISIBLE);
+                rlMessage.setVisibility(View.GONE);
                 fragment = AboutFragment.newInstance();
                 break;
             default:

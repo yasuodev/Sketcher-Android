@@ -3,15 +3,38 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/rlSearchBox"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="fjdklafjeo;awjfklejfio;wj"/>
-    <!--<ListView-->
-        <!--android:id="@+id/home_list"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+        android:layout_height="40dp"
+        android:gravity="center_vertical">
 
-    <!--</ListView>-->
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="50dp"
+            android:background="@drawable/border"
+            android:hint="Search"
+            android:textColorHint="@color/gray_selected"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="17sp"/>
+
+        <ImageButton
+            android:id="@+id/btnSearch"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/search"/>
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/home_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 
 </LinearLayout>

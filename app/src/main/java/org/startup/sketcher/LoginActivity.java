@@ -7,10 +7,13 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -48,15 +51,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.rlForgot).setOnClickListener(this);
         findViewById(R.id.rlCreate).setOnClickListener(this);
         findViewById(R.id.rlRemember).setOnClickListener(this);
-
-//        String is_remember_user = read(Constant.SHARED_KEY.Key_IsRememberUser);
-//        if (is_remember_user.equalsIgnoreCase("true")) {
-//            isRemember = true;
-//            imgCheck.setImageResource(R.drawable.checked);
-//        } else {
-//            isRemember = false;
-//            imgCheck.setImageResource(R.drawable.unchecked);
-//        }
 
     }
 

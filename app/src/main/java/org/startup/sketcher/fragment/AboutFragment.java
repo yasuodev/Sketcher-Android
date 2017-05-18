@@ -32,8 +32,6 @@ public class AboutFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
     }
 
     @OnClick(R.id.rlInfoEmail)
