@@ -17,7 +17,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.startup.sketcher.LoginActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.startup.sketcher.R;
 import org.startup.sketcher.util.Constant;
 import org.startup.sketcher.util.Util;
@@ -26,10 +27,11 @@ import butterknife.ButterKnife;
 
 public class HomeFragment extends Fragment {
 
-    private String sort_option = "Most Recent";
+    public static String sort_option = "Most Recent";
+    private String sortBy = "";
 
-
-    public static HomeFragment newInstance() {
+    public static HomeFragment newInstance(String sortBy) {
+        sort_option = sortBy;
         HomeFragment homeFragment = new HomeFragment();
         return homeFragment;
     }
@@ -48,7 +50,17 @@ public class HomeFragment extends Fragment {
 
         if (Util.isOnline(getActivity())) {
             String userid = Util.ReadSharePreference(getActivity(), Constant.SHARED_KEY.Key_UserID);
-            (new GetData(userid, sort_option)).execute();
+            if (sort_option.equals("Most Recent")){
+                sortBy = "";
+            } else if (sort_option.equals("A-Z")){
+                sortBy = "DESC";
+            } else if (sort_option.equals("Z-A")){
+                sortBy = "ASC";
+            } else if (sort_option.equals("Starred")){
+                sortBy = "STARRED";
+            }
+
+            (new GetData(userid, sortBy)).execute();
         } else {
             toast(Constant.network_error);
         }
@@ -105,8 +117,9 @@ public class HomeFragment extends Fragment {
                 HttpClient client = new DefaultHttpClient();
                 HttpResponse response = client.execute(httpPost);
                 responseString = EntityUtils.toString(response.getEntity());
-                Log.d("request: ", responseString);
+                Log.d("home request: ", responseString);
             } catch (Exception e) {
+                Log.d("TEST: ", e.toString());
                 e.printStackTrace();
             }
 
@@ -120,6 +133,20 @@ public class HomeFragment extends Fragment {
                 if (progressDialog.isShowing()) progressDialog.dismiss();
             }
 
+            try{
+                JSONObject jObj = new JSONObject(result);
+                boolean status = jObj.optBoolean("Status");
+
+                if (status) {
+
+                } else {
+                    String message = jObj.optString("Message");
+                    toast(message);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
     }

@@ -30,7 +30,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-
 public class HomeActivity extends FragmentActivity {
 
     @InjectView(R.id.drawer_layout)
@@ -43,8 +42,8 @@ public class HomeActivity extends FragmentActivity {
     View rlMainTitle;
     @InjectView(R.id.tvMainTitle)
     TextView tvMainTitle;
-    @InjectView(R.id.rlMessage)
-    RelativeLayout rlMessage;
+    @InjectView(R.id.rlAddSketch)
+    RelativeLayout rlAddSketch;
     @InjectView(R.id.viewPopup)
     View viewPopup;
 
@@ -76,6 +75,11 @@ public class HomeActivity extends FragmentActivity {
         }
     }
 
+    @OnClick(R.id.rlAddSketch)
+    public void addSketch(View view) {
+        startActivity(AddSketchActivity.class);
+    }
+
     @OnClick(R.id.rlMainTitle)
     public void showPopup(View view) {
         if (viewPopup.getVisibility() == View.GONE) {
@@ -88,25 +92,61 @@ public class HomeActivity extends FragmentActivity {
     @OnClick(R.id.rlMostRecent)
     public void onMostRecent(View view){
         viewPopup.setVisibility(View.GONE);
-        tvMainTitle.setText("Most Recent");
+
+        if (!(tvMainTitle.getText().equals("Most Recent"))) {
+            tvMainTitle.setText("Most Recent");
+            fragment = HomeFragment.newInstance("Most Recent");
+            if (fragment != null) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
+            }
+        }
     }
 
     @OnClick(R.id.rlAZ)
     public void onAZ(View view) {
         viewPopup.setVisibility(View.GONE);
-        tvMainTitle.setText("A-Z");
+
+        if (!(tvMainTitle.getText().equals("A-Z"))) {
+            tvMainTitle.setText("A-Z");
+            fragment = HomeFragment.newInstance("A-Z");
+            if (fragment != null) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
+            }
+        }
     }
 
     @OnClick(R.id.rlZA)
     public void onZA(View view){
         viewPopup.setVisibility(View.GONE);
-        tvMainTitle.setText("Z-A");
+
+        if (!(tvMainTitle.getText().equals("Z-A"))) {
+            tvMainTitle.setText("Z-A");
+            fragment = HomeFragment.newInstance("Z-A");
+            if (fragment != null) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
+            }
+        }
     }
 
     @OnClick(R.id.rlStarred)
     public void onStarred(View view){
         viewPopup.setVisibility(View.GONE);
-        tvMainTitle.setText("Starred");
+
+        if (!(tvMainTitle.getText().equals("Starred"))) {
+            tvMainTitle.setText("Starred");
+            fragment = HomeFragment.newInstance("Starred");
+            if (fragment != null) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
+            }
+        }
     }
 
     private void setMenuList() {
@@ -118,24 +158,33 @@ public class HomeActivity extends FragmentActivity {
     }
 
     private void displayView(int position) {
+
+        if (selectedPosition == position){
+            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setSelection(position);
+            mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerList.setAdapter(new MenuListAdapter(getApplicationContext(), listMenu, position));
+            return;
+        }
+
         selectedPosition = position;
         switch (position) {
             case 1:
                 rlMainTitle.setVisibility(View.VISIBLE);
                 tvMainTitle.setText("Most Recent");
                 tvAboutTitle.setVisibility(View.GONE);
-                rlMessage.setVisibility(View.VISIBLE);
+                rlAddSketch.setVisibility(View.VISIBLE);
 
-                fragment = HomeFragment.newInstance();
+                fragment = HomeFragment.newInstance("Most Recent");
                 break;
             case 2:
                 rlMainTitle.setVisibility(View.GONE);
                 tvAboutTitle.setVisibility(View.VISIBLE);
-                rlMessage.setVisibility(View.GONE);
+                rlAddSketch.setVisibility(View.GONE);
                 fragment = AboutFragment.newInstance();
                 break;
             default:
-                fragment = HomeFragment.newInstance();
+                fragment = HomeFragment.newInstance("Most Recent");
                 break;
         }
 

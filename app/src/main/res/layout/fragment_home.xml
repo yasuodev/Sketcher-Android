@@ -13,6 +13,7 @@
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:singleLine="true"
             android:paddingLeft="50dp"
             android:background="@drawable/border"
             android:hint="Search"

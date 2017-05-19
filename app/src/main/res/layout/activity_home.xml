@@ -75,7 +75,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rlMessage"
+                    android:id="@+id/rlAddSketch"
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true">
