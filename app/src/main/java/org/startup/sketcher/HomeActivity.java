@@ -51,7 +51,7 @@ public class HomeActivity extends FragmentActivity {
     Fragment fragment;
 
     ArrayList<String> listMenu = new ArrayList<String>();
-    public static int selectedPosition = 1;
+    public static int selectedPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,8 @@ public class HomeActivity extends FragmentActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.inject(this);
 
-        selectedPosition = 1;
         setMenuList();
-        displayView(selectedPosition);
+        displayView(1);
     }
 
 
@@ -93,44 +92,36 @@ public class HomeActivity extends FragmentActivity {
     public void onMostRecent(View view){
         viewPopup.setVisibility(View.GONE);
 
-        if (!(tvMainTitle.getText().equals("Most Recent"))) {
-            tvMainTitle.setText("Most Recent");
-            fragment = HomeFragment.newInstance("Most Recent");
-            if (fragment != null) {
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
-            }
+        tvMainTitle.setText("Most Recent");
+        fragment = HomeFragment.newInstance("Most Recent");
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_container, fragment).commit();
         }
     }
 
     @OnClick(R.id.rlAZ)
     public void onAZ(View view) {
         viewPopup.setVisibility(View.GONE);
-
-        if (!(tvMainTitle.getText().equals("A-Z"))) {
-            tvMainTitle.setText("A-Z");
-            fragment = HomeFragment.newInstance("A-Z");
-            if (fragment != null) {
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
-            }
+        tvMainTitle.setText("A-Z");
+        fragment = HomeFragment.newInstance("A-Z");
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_container, fragment).commit();
         }
     }
 
     @OnClick(R.id.rlZA)
     public void onZA(View view){
         viewPopup.setVisibility(View.GONE);
-
-        if (!(tvMainTitle.getText().equals("Z-A"))) {
-            tvMainTitle.setText("Z-A");
-            fragment = HomeFragment.newInstance("Z-A");
-            if (fragment != null) {
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
-            }
+        tvMainTitle.setText("Z-A");
+        fragment = HomeFragment.newInstance("Z-A");
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_container, fragment).commit();
         }
     }
 
@@ -138,14 +129,12 @@ public class HomeActivity extends FragmentActivity {
     public void onStarred(View view){
         viewPopup.setVisibility(View.GONE);
 
-        if (!(tvMainTitle.getText().equals("Starred"))) {
-            tvMainTitle.setText("Starred");
-            fragment = HomeFragment.newInstance("Starred");
-            if (fragment != null) {
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_container, fragment).commit();
-            }
+        tvMainTitle.setText("Starred");
+        fragment = HomeFragment.newInstance("Starred");
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_container, fragment).commit();
         }
     }
 

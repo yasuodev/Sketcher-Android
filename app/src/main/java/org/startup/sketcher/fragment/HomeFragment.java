@@ -2,12 +2,24 @@ package org.startup.sketcher.fragment;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Layout;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -17,18 +29,35 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.startup.sketcher.R;
 import org.startup.sketcher.util.Constant;
 import org.startup.sketcher.util.Util;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class HomeFragment extends Fragment {
 
+    @InjectView(R.id.lvHome)
+    ListView lvHome;
+    @InjectView(R.id.etSearch)
+    EditText etSearch;
+
     public static String sort_option = "Most Recent";
     private String sortBy = "";
+
+    PostListAdapter postListAdapter;
+
+    ArrayList<HashMap<String, String>> listData = new ArrayList<HashMap<String, String>>();
+    ArrayList<Integer> listIndex = new ArrayList<Integer>();
 
     public static HomeFragment newInstance(String sortBy) {
         sort_option = sortBy;
@@ -41,6 +70,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.inject(this, view);
 
+        init();
         return view;
     }
 
@@ -67,10 +97,85 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void init(){
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN){
+                    hideKeyboard();
+
+                    String searchString = etSearch.getText().toString().trim().toLowerCase();
+
+                    listIndex = new ArrayList<Integer>();
+
+                    if (searchString.length() > 0){
+                        for (int i = 0; i < listData.size(); i++){
+                            HashMap<String, String> sketchData = listData.get(i);
+                            String sketchTitle = sketchData.get("sketchTitle").toLowerCase();
+                            if (sketchTitle.contains(searchString)){
+                                listIndex.add(i);
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < listData.size(); i++){
+                            listIndex.add(i);
+                        }
+                    }
+                    postListAdapter = new PostListAdapter(getActivity(), listIndex);
+                    lvHome.setAdapter(postListAdapter);
+
+                }
+                return false;
+            }
+        });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String searchString = s.toString().toLowerCase();
+                listIndex = new ArrayList<Integer>();
+
+                if (searchString.length() > 0){
+                    for (int i = 0; i < listData.size(); i++){
+                        HashMap<String, String> sketchData = listData.get(i);
+                        String sketchTitle = sketchData.get("sketchTitle").toLowerCase();
+                        if (sketchTitle.contains(searchString)){
+                            listIndex.add(i);
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < listData.size(); i++){
+                        listIndex.add(i);
+                    }
+                }
+                postListAdapter = new PostListAdapter(getActivity(), listIndex);
+                lvHome.setAdapter(postListAdapter);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
     protected void toast(CharSequence text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
     }
 
+    protected void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
     class GetData extends AsyncTask<Void, String, String>{
         ProgressDialog progressDialog;
@@ -138,6 +243,21 @@ public class HomeFragment extends Fragment {
                 boolean status = jObj.optBoolean("Status");
 
                 if (status) {
+                    JSONArray jsonArray = jObj.getJSONArray("Sketch");
+
+                    for (int i = jsonArray.length()-1; i >= 0; i--) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        HashMap<String, String> hashMap = new HashMap<String, String>();
+
+                        hashMap.put("sketchID", jsonObject.optString("sketchID"));
+                        hashMap.put("sketchTitle", jsonObject.optString("sketchTitle"));
+                        hashMap.put("sketchDate", jsonObject.optString("sketchDate"));
+                        hashMap.put("sketchIdea", jsonObject.optString("sketchIdea"));
+                        hashMap.put("starred", jsonObject.optString("starred"));
+
+                        listData.add(hashMap);
+                        listIndex.add(listData.indexOf(hashMap));
+                    }
 
                 } else {
                     String message = jObj.optString("Message");
@@ -148,6 +268,182 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
 
+            if (getActivity() != null){
+                postListAdapter = new PostListAdapter(getActivity(), listIndex);
+                lvHome.setAdapter(postListAdapter);
+            }
+
         }
+    }
+
+    public class PostListAdapter extends BaseAdapter {
+
+        private Context context;
+        private LayoutInflater inflater = null;
+        ArrayList<Integer> locallist;
+
+        public PostListAdapter(Context context, ArrayList<Integer> locallist) {
+            this.context = context;
+            this.locallist = locallist;
+
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        }
+
+        private void add(Integer index) {
+            locallist.add(index);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount(){
+            return locallist.size();
+        }
+
+        @Override
+        public Object getItem(int i){
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i){
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View view, ViewGroup viewGroup) {
+            ViewHolder holder;
+            if (view == null) {
+                view = inflater.inflate(R.layout.list_row, null);
+                holder = new ViewHolder(view);
+                view.setTag(holder);
+            } else {
+                holder = (ViewHolder) view.getTag();
+            }
+
+            final Integer selectedIndex = locallist.get(position);
+            HashMap<String, String> sketchData = listData.get(selectedIndex);
+            holder.tvDate.setText(sketchData.get("sketchDate"));
+            holder.tvIdea.setText(sketchData.get("sketchTitle"));
+            holder.tvDescription.setText(sketchData.get("sketchIdea"));
+            if (sketchData.get("starred").equals("1"))
+                holder.btnFlag.setBackgroundResource(R.drawable.star_selected);
+            else
+                holder.btnFlag.setBackgroundResource(R.drawable.star_unselected);
+            holder.btnFlag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Util.isOnline(getActivity())){
+                        (new Starred(selectedIndex)).execute();
+                    }
+                }
+            });
+
+            return view;
+        }
+    }
+
+    static class ViewHolder {
+
+        @InjectView(R.id.tvDate)
+        TextView tvDate;
+        @InjectView(R.id.tvIdea)
+        TextView tvIdea;
+        @InjectView(R.id.tvDescription)
+        TextView tvDescription;
+        @InjectView(R.id.btnFlag)
+        ImageButton btnFlag;
+
+
+        public ViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
+
+    }
+
+    class Starred extends AsyncTask<Void, String, String>{
+
+        ProgressDialog progressDialog;
+        String responseString;
+        int selectedIndex = 0;
+
+        public Starred(Integer selectedIndex){
+            this.selectedIndex = selectedIndex;
+        }
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+
+            if (getActivity() != null){
+                if (progressDialog == null)
+                    progressDialog = ProgressDialog.show(getActivity(), null, null, true, false);
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... params){
+            String envelope = "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:quote5\">"+
+                "<soapenv:Header/>"+
+                "<soapenv:Body>"+
+                "<urn:starSketch soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"+
+                "<sketch_id xsi:type=\"xsd:string\">%s</sketch_id>"+
+                "</urn:starSketch>"+
+                "</soapenv:Body>"+
+                "</soapenv:Envelope>";
+
+            String sketchID = listData.get(selectedIndex).get("sketchID");
+            String soapmessage = String.format(envelope, sketchID);
+
+            HttpPost httpPost = new HttpPost(Constant.URL);
+            StringEntity entity;
+
+            try {
+                entity = new StringEntity(soapmessage, HTTP.UTF_8);
+                httpPost.setHeader("Content-Type", "text/xml;charset=UTF-8");
+                httpPost.setEntity(entity);
+                HttpClient client = new DefaultHttpClient();
+                HttpResponse response = client.execute(httpPost);
+                responseString = EntityUtils.toString(response.getEntity());
+                Log.d("starredRequest: ", responseString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseString;
+        }
+
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+
+            if (progressDialog != null) {
+                if (progressDialog.isShowing()) progressDialog.dismiss();
+            }
+
+            try{
+                JSONObject jObj = new JSONObject(result);
+                boolean status = jObj.optBoolean("Status");
+                if (status){
+                    HashMap<String, String> sketchData = (HashMap<String, String>) listData.get(selectedIndex);
+                    if (sketchData.get("starred").equals("1")){
+                        sketchData.put("starred", "0");
+                    } else {
+                        sketchData.put("starred", "1");
+                    }
+                    listData.set(selectedIndex, sketchData);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (getActivity() != null){
+
+                postListAdapter = new PostListAdapter(getActivity(), listIndex);
+                lvHome.setAdapter(postListAdapter);
+            }
+
+        }
+
     }
 }
