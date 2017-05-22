@@ -143,8 +143,8 @@ public class AddSketchActivity extends BaseActivity {
                     toast(error);
                 }
 
-            } catch (JSONException e){
-
+            } catch (Exception e){
+                toast("no result");
             }
         }
     }

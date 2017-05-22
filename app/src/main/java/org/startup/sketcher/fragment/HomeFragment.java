@@ -273,7 +273,9 @@ public class HomeFragment extends Fragment {
                     toast(message);
                 }
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
+
+                toast("no result");
                 e.printStackTrace();
             }
 

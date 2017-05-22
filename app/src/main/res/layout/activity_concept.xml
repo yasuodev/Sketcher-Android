@@ -143,17 +143,17 @@
                 <RelativeLayout
                     android:id="@+id/rlWho"
                     android:layout_width="match_parent"
-                    android:layout_height="130dp">
+                    android:layout_height="110dp">
 
                     <TextView
                         android:id="@+id/tvWhoTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:textColor="@color/green"
                         android:textStyle="bold"
-                        android:textSize="19sp"
+                        android:textSize="17sp"
                         android:text="WHO"/>
 
                     <RelativeLayout
@@ -162,7 +162,7 @@
                         android:layout_toRightOf="@+id/tvWhoTitle"
                         android:layout_toLeftOf="@+id/rlWhoArrow1"
                         android:layout_marginLeft="30dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp">
 
                         <TextView
@@ -170,7 +170,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:textSize="19sp"
+                            android:textSize="17sp"
                             android:text="Target group" />
 
                         <TextView
@@ -210,35 +210,35 @@
                 <RelativeLayout
                     android:id="@+id/rlWhy"
                     android:layout_width="match_parent"
-                    android:layout_height="130dp">
+                    android:layout_height="110dp">
 
                     <TextView
                         android:id="@+id/tvWhyTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
+                        android:text="WHY"
                         android:textColor="@color/green"
-                        android:textStyle="bold"
-                        android:textSize="19sp"
-                        android:text="WHY"/>
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_toRightOf="@+id/tvWhyTitle"
-                        android:layout_toLeftOf="@+id/rlWhoArrow2"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginLeft="30dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="10dp">
+                        android:layout_marginTop="10dp"
+                        android:layout_toLeftOf="@+id/rlWhoArrow2"
+                        android:layout_toRightOf="@+id/tvWhyTitle">
 
                         <TextView
                             android:id="@+id/tvConsumer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textSize="19sp"
-                            android:text="Consumer/Market need" />
+                            android:text="Consumer/Market need"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tvWhy"
@@ -246,9 +246,9 @@
                             android:layout_height="match_parent"
                             android:layout_below="@+id/tvConsumer"
                             android:layout_marginTop="6dp"
+                            android:hint="@string/why_hint"
                             android:maxLines="4"
-                            android:textSize="13sp"
-                            android:hint="@string/why_hint"/>
+                            android:textSize="13sp" />
 
                     </RelativeLayout>
 
@@ -262,7 +262,7 @@
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:background="@drawable/icon_arrow_right"/>
+                            android:background="@drawable/icon_arrow_right" />
 
                     </RelativeLayout>
 
@@ -270,14 +270,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/gray_selected"/>
+                        android:background="@color/gray_selected" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rlWhat"
                     android:layout_width="match_parent"
-                    android:layout_height="130dp">
+                    android:layout_height="120dp">
 
                     <TextView
                         android:id="@+id/tvWhatTitle"
@@ -285,36 +285,37 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="15dp"
+                        android:text="WHAT"
                         android:textColor="@color/green"
-                        android:textStyle="bold"
-                        android:textSize="19sp"
-                        android:text="WHAT"/>
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_toRightOf="@+id/tvWhatTitle"
-                        android:layout_toLeftOf="@+id/rlWhoArrow3"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginLeft="24dp"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp">
+                        android:layout_toLeftOf="@+id/rlWhoArrow3"
+                        android:layout_toRightOf="@+id/tvWhatTitle">
 
                         <TextView
                             android:id="@+id/tvProduct"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textSize="19sp"
-                            android:text="Product Positioning" />
+                            android:text="Product Positioning"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tvWhat"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_below="@+id/tvProduct"
+                            android:layout_marginTop="6dp"
+                            android:hint="@string/what_hint"
                             android:maxLines="4"
-                            android:textSize="13sp"
-                            android:hint="@string/what_hint"/>
+                            android:textSize="13sp" />
 
                     </RelativeLayout>
 
@@ -328,7 +329,7 @@
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:background="@drawable/icon_arrow_right"/>
+                            android:background="@drawable/icon_arrow_right" />
 
                     </RelativeLayout>
 
@@ -336,7 +337,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/gray_selected"/>
+                        android:background="@color/gray_selected" />
 
                 </RelativeLayout>
 

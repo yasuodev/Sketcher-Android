@@ -27,8 +27,8 @@
 
             <ImageButton
                 android:id="@+id/btnFlag"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignTop="@+id/tvDescription"
                 android:background="@drawable/star_unselected"/>
 
@@ -50,6 +50,7 @@
                 android:layout_below="@+id/tvIdea"
                 android:layout_toRightOf="@+id/btnFlag"
                 android:layout_toLeftOf="@+id/btnDetail"
+                android:maxLines="2"
                 android:padding="6dp"
                 android:textSize="16sp"
                 android:text="Description fjsafkldasjfoe; fdklas;fje;aj"/>
