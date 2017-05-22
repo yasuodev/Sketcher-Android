@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Sketcher</string>
 
+    <string name="home">\u003c Home</string>
+    <string name="who_hint">Describe the customer or consumer SEGMENT you would be targeting with your product: Who would be using your product? Retailers, Consumers, B2B...</string>
+    <string name="why_hint">Describe the NEED of the customer/consumer in the segment you would be targeting. I.e. towards which need will your product/service be playing against?</string>
+    <string name="what_hint">What is the SOLUTION or BENEFIT you will be offering with your product/service?</string>
+
 </resources>

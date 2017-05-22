@@ -3,6 +3,7 @@ package org.startup.sketcher.fragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -32,6 +33,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.startup.sketcher.ConceptActivity;
 import org.startup.sketcher.R;
 import org.startup.sketcher.util.Constant;
 import org.startup.sketcher.util.Util;
@@ -75,8 +77,8 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
 
         if (Util.isOnline(getActivity())) {
             String userid = Util.ReadSharePreference(getActivity(), Constant.SHARED_KEY.Key_UserID);
@@ -94,7 +96,11 @@ public class HomeFragment extends Fragment {
         } else {
             toast(Constant.network_error);
         }
+    }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     private void init(){
@@ -238,6 +244,9 @@ public class HomeFragment extends Fragment {
                 if (progressDialog.isShowing()) progressDialog.dismiss();
             }
 
+            listData = new ArrayList<HashMap<String, String>>();
+            listIndex = new ArrayList<Integer>();
+
             try{
                 JSONObject jObj = new JSONObject(result);
                 boolean status = jObj.optBoolean("Status");
@@ -322,7 +331,7 @@ public class HomeFragment extends Fragment {
             }
 
             final Integer selectedIndex = locallist.get(position);
-            HashMap<String, String> sketchData = listData.get(selectedIndex);
+            final HashMap<String, String> sketchData = listData.get(selectedIndex);
             holder.tvDate.setText(sketchData.get("sketchDate"));
             holder.tvIdea.setText(sketchData.get("sketchTitle"));
             holder.tvDescription.setText(sketchData.get("sketchIdea"));
@@ -330,12 +339,22 @@ public class HomeFragment extends Fragment {
                 holder.btnFlag.setBackgroundResource(R.drawable.star_selected);
             else
                 holder.btnFlag.setBackgroundResource(R.drawable.star_unselected);
+
             holder.btnFlag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (Util.isOnline(getActivity())){
                         (new Starred(selectedIndex)).execute();
                     }
+                }
+            });
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ConceptActivity.class);
+                    intent.putExtra("sketchID", sketchData.get("sketchID"));
+                    context.startActivity(intent);
                 }
             });
 
