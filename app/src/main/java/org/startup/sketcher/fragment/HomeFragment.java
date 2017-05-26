@@ -48,9 +48,6 @@ import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
-
-import static android.R.attr.type;
 
 public class HomeFragment extends Fragment {
 
@@ -66,6 +63,7 @@ public class HomeFragment extends Fragment {
 
     ArrayList<HashMap<String, String>> listData = new ArrayList<HashMap<String, String>>();
     ArrayList<Integer> listIndex = new ArrayList<Integer>();
+
 
     public static HomeFragment newInstance(String sortBy) {
         sort_option = sortBy;
@@ -124,34 +122,53 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        lvHome.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                if (listIsAtTop()){
-//                    if (Util.isOnline(getActivity())) {
-//                        String userid = Util.ReadSharePreference(getActivity(), Constant.SHARED_KEY.Key_UserID);
-//                        if (sort_option.equals("Most Recent")){
-//                            sortBy = "";
-//                        } else if (sort_option.equals("A-Z")){
-//                            sortBy = "DESC";
-//                        } else if (sort_option.equals("Z-A")){
-//                            sortBy = "ASC";
-//                        } else if (sort_option.equals("Starred")){
-//                            sortBy = "STARRED";
-//                        }
-//
-//                        (new GetData(userid, sortBy)).execute();
-//                    } else {
-//                        toast(Constant.network_error);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//            }
-//        });
+        lvHome.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            int mLastFirstVissibleItem;
+            boolean mIsScrollingUp;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                if (view.getId() == lvHome.getId()) {
+                    final int currentFirstVisibleItem = lvHome.getFirstVisiblePosition();
+
+                    if (currentFirstVisibleItem > mLastFirstVissibleItem) {
+                        mIsScrollingUp = false;
+                    } else if (currentFirstVisibleItem < mLastFirstVissibleItem) {
+                        mIsScrollingUp = true;
+                    }
+
+                    mLastFirstVissibleItem = currentFirstVisibleItem;
+                }
+
+                if (mIsScrollingUp && listIsAtTop()){
+
+                    mIsScrollingUp = false;
+                    if (Util.isOnline(getActivity())) {
+                        String userid = Util.ReadSharePreference(getActivity(), Constant.SHARED_KEY.Key_UserID);
+                        if (sort_option.equals("Most Recent")){
+                            sortBy = "";
+                        } else if (sort_option.equals("A-Z")){
+                            sortBy = "DESC";
+                        } else if (sort_option.equals("Z-A")){
+                            sortBy = "ASC";
+                        } else if (sort_option.equals("Starred")){
+                            sortBy = "STARRED";
+                        }
+
+                        (new GetData(userid, sortBy)).execute();
+                    } else {
+                        toast(Constant.network_error);
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
 
         init();
         return view;
