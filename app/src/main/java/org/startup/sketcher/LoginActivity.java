@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String username, password;
         ProgressDialog progressDialog;
         String url;
-        String soapAction = "urn:quote5#UserLogin";
+        //String soapAction = "urn:quote5#UserLogin";
         String responseString = "";
 
         public Login(String username, String password) {
@@ -186,8 +186,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 HttpClient client = new DefaultHttpClient();
                 HttpResponse response = client.execute(httpPost);
                 responseString = EntityUtils.toString(response.getEntity());
-                Log.d("request: ", responseString);
+                Log.d("loginrequest: ", responseString);
             } catch (Exception e) {
+                Log.d("loginerror: ", "error");
                 e.printStackTrace();
             }
 

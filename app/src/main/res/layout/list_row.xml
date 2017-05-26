@@ -27,9 +27,10 @@
 
             <ImageButton
                 android:id="@+id/btnFlag"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignTop="@+id/tvDescription"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/tvIdea"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/star_unselected"/>
 
             <TextView
@@ -38,7 +39,7 @@
                 android:layout_height="30dp"
                 android:layout_toRightOf="@+id/btnFlag"
                 android:layout_toLeftOf="@+id/btnDetail"
-                android:padding="6dp"
+                android:padding="4dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="Idea"/>
@@ -51,7 +52,8 @@
                 android:layout_toRightOf="@+id/btnFlag"
                 android:layout_toLeftOf="@+id/btnDetail"
                 android:maxLines="2"
-                android:padding="6dp"
+                android:padding="4dp"
+                android:ellipsize="end"
                 android:textSize="16sp"
                 android:text="Description fjsafkldasjfoe; fdklas;fje;aj"/>
 

@@ -4,10 +4,10 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,12 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -38,7 +43,6 @@ import org.startup.sketcher.R;
 import org.startup.sketcher.util.Constant;
 import org.startup.sketcher.util.Util;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -46,10 +50,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import static android.R.attr.type;
+
 public class HomeFragment extends Fragment {
 
     @InjectView(R.id.lvHome)
-    ListView lvHome;
+    com.baoyz.swipemenulistview.SwipeMenuListView lvHome;
     @InjectView(R.id.etSearch)
     EditText etSearch;
 
@@ -72,8 +78,88 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.inject(this, view);
 
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getActivity().getApplicationContext());
+                // set item background
+                deleteItem.setBackground(R.color.red);
+                // set item width
+                final float scale = getActivity().getResources().getDisplayMetrics().density;
+                int pixel = (int) (90 * scale + 0.5f);
+                deleteItem.setWidth(pixel);
+                // set a icon
+                deleteItem.setTitleColor(Color.WHITE);
+                deleteItem.setTitleSize(20);
+                deleteItem.setTitle("Delete");
+
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        lvHome.setMenuCreator(creator);
+        lvHome.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+        lvHome.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                (new DeleteSketch(position)).execute();
+                return false;
+            }
+        });
+
+        lvHome.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+            @Override
+            public void onSwipeStart(int position) {
+                lvHome.smoothOpenMenu(position);
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+
+            }
+        });
+
+//        lvHome.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                if (listIsAtTop()){
+//                    if (Util.isOnline(getActivity())) {
+//                        String userid = Util.ReadSharePreference(getActivity(), Constant.SHARED_KEY.Key_UserID);
+//                        if (sort_option.equals("Most Recent")){
+//                            sortBy = "";
+//                        } else if (sort_option.equals("A-Z")){
+//                            sortBy = "DESC";
+//                        } else if (sort_option.equals("Z-A")){
+//                            sortBy = "ASC";
+//                        } else if (sort_option.equals("Starred")){
+//                            sortBy = "STARRED";
+//                        }
+//
+//                        (new GetData(userid, sortBy)).execute();
+//                    } else {
+//                        toast(Constant.network_error);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//            }
+//        });
+
         init();
         return view;
+    }
+
+    private boolean listIsAtTop() {
+        if (lvHome.getChildCount() == 0) return true;
+        return lvHome.getChildAt(0).getTop() == 0;
     }
 
     @Override
@@ -183,6 +269,105 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    public class PostListAdapter extends BaseAdapter {
+
+        private Context context;
+        private LayoutInflater inflater = null;
+        ArrayList<Integer> locallist;
+
+        public PostListAdapter(Context context, ArrayList<Integer> locallist) {
+            this.context = context;
+            this.locallist = locallist;
+
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        }
+
+        private void add(Integer index) {
+            locallist.add(index);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount(){
+            return locallist.size();
+        }
+
+        @Override
+        public Object getItem(int i){
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i){
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View view, ViewGroup viewGroup) {
+            ViewHolder holder;
+            if (view == null) {
+                view = inflater.inflate(R.layout.list_row, null);
+                holder = new ViewHolder(view);
+                view.setTag(holder);
+            } else {
+                holder = (ViewHolder) view.getTag();
+            }
+
+            final Integer selectedIndex = locallist.get(position);
+
+            Log.d("selectedIndex", String.valueOf(selectedIndex));
+            final HashMap<String, String> sketchData = listData.get(selectedIndex);
+            holder.tvDate.setText(sketchData.get("sketchDate"));
+            holder.tvIdea.setText(sketchData.get("sketchTitle"));
+            holder.tvDescription.setText(sketchData.get("sketchIdea"));
+            if (sketchData.get("starred").equals("1"))
+                holder.btnFlag.setBackgroundResource(R.drawable.star_selected);
+            else
+                holder.btnFlag.setBackgroundResource(R.drawable.star_unselected);
+
+            holder.btnFlag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Util.isOnline(getActivity())){
+                        (new Starred(selectedIndex)).execute();
+                    }
+                }
+            });
+
+            holder.btnDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ConceptActivity.class);
+                    intent.putExtra("sketchID", sketchData.get("sketchID"));
+                    context.startActivity(intent);
+                }
+            });
+
+            return view;
+        }
+    }
+
+    static class ViewHolder {
+
+        @InjectView(R.id.tvDate)
+        TextView tvDate;
+        @InjectView(R.id.tvIdea)
+        TextView tvIdea;
+        @InjectView(R.id.tvDescription)
+        TextView tvDescription;
+        @InjectView(R.id.btnFlag)
+        ImageButton btnFlag;
+        @InjectView(R.id.btnDetail)
+        ImageButton btnDetail;
+
+
+        public ViewHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
+
+    }
+
     class GetData extends AsyncTask<Void, String, String>{
         ProgressDialog progressDialog;
         String responseString;
@@ -207,14 +392,14 @@ public class HomeFragment extends Fragment {
         @Override
         protected String doInBackground(Void... params){
             String envelope = "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:quote5\">\n"+
-            "<soapenv:Header/>\n"+
-            "<soapenv:Body>\n"+
-            "<urn:SketchListing soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n"+
-            "<owner_id xsi:type=\"xsd:string\">%s</owner_id>\n"+
-            "<sort_by xsi:type=\"xsd:string\">%s</sort_by>"+
-            "</urn:SketchListing>\n"+
-            "</soapenv:Body>\n"+
-            "</soapenv:Envelope>";
+                    "<soapenv:Header/>\n"+
+                    "<soapenv:Body>\n"+
+                    "<urn:SketchListing soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n"+
+                    "<owner_id xsi:type=\"xsd:string\">%s</owner_id>\n"+
+                    "<sort_by xsi:type=\"xsd:string\">%s</sort_by>"+
+                    "</urn:SketchListing>\n"+
+                    "</soapenv:Body>\n"+
+                    "</soapenv:Envelope>";
 
             String soapmessage = String.format(envelope, userid, sortby);
 
@@ -285,101 +470,6 @@ public class HomeFragment extends Fragment {
             }
 
         }
-    }
-
-    public class PostListAdapter extends BaseAdapter {
-
-        private Context context;
-        private LayoutInflater inflater = null;
-        ArrayList<Integer> locallist;
-
-        public PostListAdapter(Context context, ArrayList<Integer> locallist) {
-            this.context = context;
-            this.locallist = locallist;
-
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        }
-
-        private void add(Integer index) {
-            locallist.add(index);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount(){
-            return locallist.size();
-        }
-
-        @Override
-        public Object getItem(int i){
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i){
-            return 0;
-        }
-
-        @Override
-        public View getView(final int position, View view, ViewGroup viewGroup) {
-            ViewHolder holder;
-            if (view == null) {
-                view = inflater.inflate(R.layout.list_row, null);
-                holder = new ViewHolder(view);
-                view.setTag(holder);
-            } else {
-                holder = (ViewHolder) view.getTag();
-            }
-
-            final Integer selectedIndex = locallist.get(position);
-            final HashMap<String, String> sketchData = listData.get(selectedIndex);
-            holder.tvDate.setText(sketchData.get("sketchDate"));
-            holder.tvIdea.setText(sketchData.get("sketchTitle"));
-            holder.tvDescription.setText(sketchData.get("sketchIdea"));
-            if (sketchData.get("starred").equals("1"))
-                holder.btnFlag.setBackgroundResource(R.drawable.star_selected);
-            else
-                holder.btnFlag.setBackgroundResource(R.drawable.star_unselected);
-
-            holder.btnFlag.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (Util.isOnline(getActivity())){
-                        (new Starred(selectedIndex)).execute();
-                    }
-                }
-            });
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, ConceptActivity.class);
-                    intent.putExtra("sketchID", sketchData.get("sketchID"));
-                    context.startActivity(intent);
-                }
-            });
-
-            return view;
-        }
-    }
-
-    static class ViewHolder {
-
-        @InjectView(R.id.tvDate)
-        TextView tvDate;
-        @InjectView(R.id.tvIdea)
-        TextView tvIdea;
-        @InjectView(R.id.tvDescription)
-        TextView tvDescription;
-        @InjectView(R.id.btnFlag)
-        ImageButton btnFlag;
-
-
-        public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
-        }
-
     }
 
     class Starred extends AsyncTask<Void, String, String>{
@@ -466,5 +556,89 @@ public class HomeFragment extends Fragment {
 
         }
 
+    }
+
+    class DeleteSketch extends AsyncTask<Void, String, String>{
+        ProgressDialog progressDialog;
+        String responseString;
+        int selectedIndex = 0;
+
+        public DeleteSketch(Integer selectedIndex){
+            this.selectedIndex = selectedIndex;
+        }
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+
+            if (getActivity() != null){
+                if (progressDialog == null)
+                    progressDialog = ProgressDialog.show(getActivity(), null, null, true, false);
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... params){
+            String envelope = "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:quote5\">"+
+                        "<soapenv:Header/>"+
+                        "<soapenv:Body>"+
+                        "<urn:deleteSketch soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"+
+                        "<sketch_id xsi:type=\"xsd:string\">%s</sketch_id>"+
+                        "</urn:deleteSketch>"+
+                        "</soapenv:Body>"+
+                        "</soapenv:Envelope>";
+
+            String sketchID = listData.get(selectedIndex).get("sketchID");
+            String soapmessage = String.format(envelope, sketchID);
+
+            HttpPost httpPost = new HttpPost(Constant.URL);
+            StringEntity entity;
+
+            try {
+                entity = new StringEntity(soapmessage, HTTP.UTF_8);
+                httpPost.setHeader("Content-Type", "text/xml;charset=UTF-8");
+                httpPost.setEntity(entity);
+                HttpClient client = new DefaultHttpClient();
+                HttpResponse response = client.execute(httpPost);
+                responseString = EntityUtils.toString(response.getEntity());
+                Log.d("DeleteRequest: ", responseString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseString;
+        }
+
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+
+            if (progressDialog != null) {
+                if (progressDialog.isShowing()) progressDialog.dismiss();
+            }
+
+            try{
+                JSONObject jObj = new JSONObject(result);
+                boolean status = jObj.optBoolean("Status");
+                if (status){
+                    listData.remove(this.selectedIndex);
+                    etSearch.setText("");
+
+                    listIndex = new ArrayList<Integer>();
+                    for (int i = 0; i < listData.size(); i++){
+                        listIndex.add(i);
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (getActivity() != null){
+
+                postListAdapter = new PostListAdapter(getActivity(), listIndex);
+                lvHome.setAdapter(postListAdapter);
+            }
+
+        }
     }
 }

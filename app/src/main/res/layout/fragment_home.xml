@@ -31,11 +31,11 @@
 
     </RelativeLayout>
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/lvHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ListView>
+    </com.baoyz.swipemenulistview.SwipeMenuListView>
 
 </LinearLayout>
