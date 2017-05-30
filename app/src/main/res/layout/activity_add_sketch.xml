@@ -109,6 +109,7 @@
                     android:background="@drawable/no_border"
                     android:inputType="textMultiLine"
                     android:maxLines="3"
+                    android:maxLength="30"
                     android:textSize="14sp"
                     android:hint="Write down a working title for your idea in maximum 30 characters"/>
 
@@ -152,6 +153,7 @@
                     android:background="@drawable/no_border"
                     android:inputType="textMultiLine"
                     android:maxLines="7"
+                    android:maxLength="140"
                     android:textSize="14sp"
                     android:hint="Write down a essence of the idea in maximum 140 characters"/>
 

@@ -64,8 +64,8 @@
                     android:layout_height="match_parent">
 
                     <ImageButton
-                        android:layout_width="23dp"
-                        android:layout_height="30dp"
+                        android:layout_width="30dp"
+                        android:layout_height="25dp"
                         android:layout_centerInParent="true"
                         android:background="@drawable/menu_icon"
                         android:clickable="false"
@@ -186,7 +186,7 @@
         <!-- Listview to display slider menu -->
         <ListView
             android:id="@+id/list_slidermenu"
-            android:layout_width="match_parent"
+            android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@color/menu_list_bg"

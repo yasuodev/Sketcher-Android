@@ -68,13 +68,13 @@ public class AddSketchActivity extends BaseActivity {
 
     class AddSketch extends AsyncTask<Void, String, String> {
 
-        String userid,sketch_title, sketch_idea;
+        String userid, sketch_title, sketch_idea;
         String responseString;
         ProgressDialog progressDialog;
 
         public AddSketch(String sketch_title, String sketch_idea){
-            this.sketch_title = sketch_title;
-            this.sketch_idea = sketch_idea;
+            this.sketch_title = Util.encode(sketch_title);
+            this.sketch_idea = Util.encode(sketch_idea);
             this.userid = Util.ReadSharePreference(getApplicationContext(), Constant.SHARED_KEY.Key_UserID);
         }
 
@@ -101,7 +101,7 @@ public class AddSketchActivity extends BaseActivity {
             "</soapenv:Body>\n"+
             "</soapenv:Envelope>";
 
-            String soapmessage = String.format(envelope, userid, sketch_title, sketch_idea, "1");
+            String soapmessage = String.format(envelope, userid, sketch_title, this.sketch_idea, "1");
 
             HttpPost httpPost = new HttpPost(Constant.URL);
             StringEntity entity;

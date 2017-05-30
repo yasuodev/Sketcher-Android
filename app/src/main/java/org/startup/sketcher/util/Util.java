@@ -32,4 +32,33 @@ public class Util {
         return read_data.getString(key, "");
     }
 
+    public static String encode(String str){
+
+        String[] escapeChars = {";", "/", "?" , ":",
+                "@", "&", "=", "+" ,
+                "$" , ",", "[", "]",
+                "#", "!", "'", "(",
+                ")", "*", " ", "{", "}", "<", ">", "\""};
+
+
+        String[] replaceChars = {"%3B", "%2F", "%3F",
+                "%3A", "%40", "%26" ,
+                "%3D", "%2B", "%24" ,
+                "%2C", "%5B", "%5D",
+                "%23", "%21", "%27",
+                "%28", "%29", "%2A", "+", "%7B", "%7D", "%3C", "%3E", "%22"};
+
+        int len = escapeChars.length;
+
+        String temp = str;
+
+        int i;
+        for(i = 0; i < len; i++) {
+            temp = temp.replace(escapeChars[i], replaceChars[i]);
+        }
+
+        String result = temp;
+        return result;
+    }
+
 }

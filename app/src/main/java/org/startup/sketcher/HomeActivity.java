@@ -254,6 +254,10 @@ public class HomeActivity extends FragmentActivity {
                 holder.rlMain.setBackgroundColor(getResources().getColor(R.color.transparent));
 
             holder.menuTitle.setText(locallist.get(position));
+            if (position == 0) {
+                String username = Util.ReadSharePreference(getApplicationContext(), Constant.SHARED_KEY.Key_UserName);
+                holder.menuTitle.setText(username);
+            }
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

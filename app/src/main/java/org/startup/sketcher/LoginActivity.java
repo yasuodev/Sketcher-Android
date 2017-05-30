@@ -146,8 +146,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String responseString = "";
 
         public Login(String username, String password) {
-            this.username = username;
-            this.password = password;
+            this.username = Util.encode(username);
+            this.password = Util.encode(password);
         }
 
         @Override

@@ -1,8 +1,6 @@
 package org.startup.sketcher;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -464,18 +462,9 @@ public class ConceptActivity extends BaseActivity {
                     tvWhat.setText(strWhat);
 
                 } else {
+
+                    toast("Click on WHO, WHY, and WHAT to start working on the concept.");
                     String message = jObj.optString("Message");
-                    AlertDialog alertDialog = new AlertDialog.Builder(ConceptActivity.this).create();
-                    alertDialog.setTitle(message);
-                    alertDialog.setMessage("Click on WHO, WHY, and WHAT to start working on the concept.");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
                 }
 
 
@@ -496,8 +485,8 @@ public class ConceptActivity extends BaseActivity {
 
         public EditSketchIdea(String sketchID, String sketch_title, String sketch_idea){
             this.sketchID = sketchID;
-            this.sketch_title = sketch_title;
-            this.sketch_idea = sketch_idea;
+            this.sketch_title = Util.encode(sketch_title);
+            this.sketch_idea = Util.encode(sketch_idea);
             this.userID = read(Constant.SHARED_KEY.Key_UserID);
         }
 
@@ -583,39 +572,9 @@ public class ConceptActivity extends BaseActivity {
 
         public EditWhoWhyWhat(String sketchID, String who, String why, String what){
             this.sketchID = sketchID;
-            this.who = urlEncode(who);
-            this.why = urlEncode(why);
-            this.what = urlEncode(what);
-        }
-
-        private String urlEncode(String str){
-            String[] a = {"fds"};
-            String[] escapeChars = {";", "/" , "?" , ":" ,
-                    "@" , "&", "=", "+" ,
-                    "$" , ",", "[" , "]",
-                    "#", "!", "'", "(",
-                    ")", "*", " ", "{", "}", "<", ">", "\""};
-
-
-            String[] replaceChars = {"%3B", "%2F", "%3F",
-                    "%3A", "%40" , "%26" ,
-                    "%3D", "%2B" , "%24" ,
-                    "%2C", "%5B" , "%5D",
-                    "%23", "%21", "%27",
-                    "%28", "%29", "%2A", "+", "%7B", "%7D", "%3C", "%3E", "%22"};
-
-            int len = escapeChars.length;
-
-            String temp = str;
-
-            int i;
-            for(i = 0; i < len; i++)
-            {
-		        temp.replace(escapeChars[i], replaceChars[i]);
-            }
-
-            String result = temp;
-            return result;
+            this.who = Util.encode(who);
+            this.why = Util.encode(why);
+            this.what = Util.encode(what);
         }
 
         @Override
@@ -776,37 +735,7 @@ public class ConceptActivity extends BaseActivity {
 
         public EditScrapbook(String sketchID, String scrap){
             this.sketchID = sketchID;
-            this.scrap = urlEncode(scrap);
-        }
-
-        private String urlEncode(String str){
-            String[] a = {"fds"};
-            String[] escapeChars = {";", "/" , "?" , ":" ,
-                    "@" , "&", "=", "+" ,
-                    "$" , ",", "[" , "]",
-                    "#", "!", "'", "(",
-                    ")", "*", " ", "{", "}", "<", ">", "\""};
-
-
-            String[] replaceChars = {"%3B", "%2F", "%3F",
-                    "%3A", "%40" , "%26" ,
-                    "%3D", "%2B" , "%24" ,
-                    "%2C", "%5B" , "%5D",
-                    "%23", "%21", "%27",
-                    "%28", "%29", "%2A", "+", "%7B", "%7D", "%3C", "%3E", "%22"};
-
-            int len = escapeChars.length;
-
-            String temp = str;
-
-            int i;
-            for(i = 0; i < len; i++)
-            {
-                temp.replace(escapeChars[i], replaceChars[i]);
-            }
-
-            String result = temp;
-            return result;
+            this.scrap = Util.encode(scrap);
         }
 
         @Override
