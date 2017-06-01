@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
                 <RelativeLayout
@@ -449,9 +449,9 @@
             <LinearLayout
                 android:id="@+id/viewConcept"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -484,7 +484,6 @@
                     android:paddingRight="15dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="20dp"
-                    android:maxLength="140"
                     android:textSize="17sp"
                     android:hint="Write down here..."/>
 

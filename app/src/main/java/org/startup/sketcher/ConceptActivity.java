@@ -97,6 +97,12 @@ public class ConceptActivity extends BaseActivity {
         rlCancel.setVisibility(View.GONE);
         rlSave.setVisibility(View.GONE);
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
         fetchSketchData();
         showSketchData();
     }
@@ -196,11 +202,6 @@ public class ConceptActivity extends BaseActivity {
                 toast(Constant.network_error);
             }
         }
-
-        isWho = false;
-        isWhy = false;
-        isWhat = false;
-        isScrapBook = false;
     }
 
     @OnClick(R.id.rlWho)
@@ -300,7 +301,7 @@ public class ConceptActivity extends BaseActivity {
         isScrapBook = true;
 
         tvEditTitle.setText("Put your thoughts down on a piece of digital paper! I.e. things you should do, follow-ups of your Sketch and much more!...");
-
+        etConcept.setText(strScrapBook);
         (new SketchScrapbook(sketchID)).execute();
     }
 
@@ -601,7 +602,7 @@ public class ConceptActivity extends BaseActivity {
             "</soapenv:Body>\n"+
             "</soapenv:Envelope>";
 
-            String soapmessage = String.format(envelope, sketchID, who, why, what);
+            String soapmessage = String.format(envelope, sketchID, who, what, why);
 
             HttpPost httpPost = new HttpPost(Constant.URL);
             StringEntity entity;
@@ -637,6 +638,12 @@ public class ConceptActivity extends BaseActivity {
                     strWho = this.who;
                     strWhy = this.why;
                     strWhat = this.what;
+
+
+                    isWho = false;
+                    isWhy = false;
+                    isWhat = false;
+                    isScrapBook = false;
 
                     showSketchData();
                 } else {

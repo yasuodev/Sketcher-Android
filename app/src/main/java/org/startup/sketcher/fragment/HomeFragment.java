@@ -674,7 +674,7 @@ public class HomeFragment extends Fragment {
         private final class GestureListener extends SimpleOnGestureListener {
 
             private static final int SWIPE_THRESHOLD = 100;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 50;
 
             @Override
             public boolean onDown(MotionEvent e){
