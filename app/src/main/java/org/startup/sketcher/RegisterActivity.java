@@ -1,12 +1,21 @@
 package org.startup.sketcher;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,6 +31,11 @@ import org.json.JSONTokener;
 import org.startup.sketcher.util.Constant;
 import org.startup.sketcher.util.Util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
+
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -29,6 +43,7 @@ public class RegisterActivity extends BaseActivity {
 
     @InjectView(R.id.etFullname)
     EditText etFullname;
+
     @InjectView(R.id.etCountry)
     EditText etCountry;
     @InjectView(R.id.etUsername)
@@ -39,6 +54,10 @@ public class RegisterActivity extends BaseActivity {
     EditText etRetypePassword;
     @InjectView(R.id.etEmail)
     EditText etEmail;
+    @InjectView(R.id.rlCountry)
+    RelativeLayout rlCountry;
+    @InjectView(R.id.lvCountry)
+    ListView lvCountry;
 
     boolean isRegisteredUsername = false;
 
@@ -52,6 +71,30 @@ public class RegisterActivity extends BaseActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     isCheckUsername();
+                }
+            }
+        });
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String country;
+        for (Locale loc : locale) {
+            country = loc.getDisplayCountry();
+            if (country.length() > 0 && !countries.contains(country)) {
+                countries.add(country);
+            }
+        }
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
+        CountryAdapter adapter = new CountryAdapter(getApplicationContext(), countries);
+        lvCountry.setAdapter(adapter);
+
+        etCountry.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    hideKeyboard();
+                    rlCountry.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -90,12 +133,6 @@ public class RegisterActivity extends BaseActivity {
             return false;
         }
 
-        if (isEmpty(getText(etCountry))) {
-            etCountry.setBackgroundResource(R.drawable.textviewredborder);
-            toast("please enter country");
-            return false;
-        }
-
         if (isEmpty(getText(etUserName))) {
             etUserName.setBackgroundResource(R.drawable.textviewredborder);
             toast("please enter user name");
@@ -131,7 +168,6 @@ public class RegisterActivity extends BaseActivity {
 
     private void initEditViews() {
         etFullname.setBackgroundResource(R.drawable.textviewborder);
-        etCountry.setBackgroundResource(R.drawable.textviewborder);
         etUserName.setBackgroundResource(R.drawable.textviewborder);
         etPassword.setBackgroundResource(R.drawable.textviewborder);
         etRetypePassword.setBackgroundResource(R.drawable.textviewborder);
@@ -303,6 +339,77 @@ public class RegisterActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
+        }
+
+    }
+
+    class CountryAdapter extends BaseAdapter
+    {
+        private Context context;
+        private LayoutInflater inflater = null;
+        ArrayList<String> arrCountries;
+
+        public CountryAdapter(Context context, ArrayList<String> arrCountries) {
+            this.context = context;
+            this.arrCountries = arrCountries;
+
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount(){
+            return arrCountries.size();
+        }
+
+        @Override
+        public Object getItem(int i){
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i){
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View view, ViewGroup viewGroup) {
+            RegisterActivity.ViewHolder holder;
+            if (view == null) {
+                view = inflater.inflate(R.layout.list_country, null);
+                holder = new RegisterActivity.ViewHolder(view);
+                view.setTag(holder);
+            } else {
+                holder = (RegisterActivity.ViewHolder) view.getTag();
+            }
+
+            final String country = arrCountries.get(position);
+
+            holder.tvCountry.setText(country);
+
+            holder.tvCountry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.d("selected ", String.valueOf(position));
+                    etCountry.setText(country);
+                    rlCountry.setVisibility(View.GONE);
+
+                    etUserName.requestFocus();
+                }
+            });
+
+            return view;
+        }
+
+    }
+
+    static class ViewHolder {
+
+        @InjectView(R.id.tvCountry)
+        TextView tvCountry;
+
+        public ViewHolder(View view) {
+            ButterKnife.inject(this, view);
         }
 
     }

@@ -9,6 +9,7 @@
     <color name="white">#fff</color>
     <color name="gray">#666</color>
     <color name="gray_selected">#d9d9d9</color>
+    <color name="overlay">#e0d9d9d9</color>
     <color name="blue">#0365c0</color>
     <color name="red">#ff0000</color>
     <color name="green">#00882b</color>

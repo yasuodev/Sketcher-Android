@@ -274,7 +274,7 @@ public class ConceptActivity extends BaseActivity {
         isScrapBook = false;
 
         String first = "Edit your ";
-        String second = "WHY";
+        String second = "WHAT";
         String third = " target: What is the SOLUTION or BENEFIT you will be offering with your product/service?";
         String str = first + second + third;
         Spannable spannable = new SpannableString(str);
