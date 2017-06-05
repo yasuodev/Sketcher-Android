@@ -486,8 +486,8 @@ public class ConceptActivity extends BaseActivity {
 
         public EditSketchIdea(String sketchID, String sketch_title, String sketch_idea){
             this.sketchID = sketchID;
-            this.sketch_title = Util.encode(sketch_title);
-            this.sketch_idea = Util.encode(sketch_idea);
+            this.sketch_title =sketch_title;
+            this.sketch_idea = sketch_idea;
             this.userID = read(Constant.SHARED_KEY.Key_UserID);
         }
 
@@ -516,7 +516,7 @@ public class ConceptActivity extends BaseActivity {
                     "</soapenv:Body>"+
                     "</soapenv:Envelope>";
 
-            String soapmessage = String.format(envelope, sketchID, userID, sketch_title, sketch_idea, "1");
+            String soapmessage = String.format(envelope, sketchID, userID, Util.encode(sketch_title), Util.encode(sketch_idea), "1");
 
             HttpPost httpPost = new HttpPost(Constant.URL);
             StringEntity entity;
@@ -573,9 +573,9 @@ public class ConceptActivity extends BaseActivity {
 
         public EditWhoWhyWhat(String sketchID, String who, String why, String what){
             this.sketchID = sketchID;
-            this.who = Util.encode(who);
-            this.why = Util.encode(why);
-            this.what = Util.encode(what);
+            this.who = who;
+            this.why = why;
+            this.what = what;
         }
 
         @Override
@@ -602,7 +602,7 @@ public class ConceptActivity extends BaseActivity {
             "</soapenv:Body>\n"+
             "</soapenv:Envelope>";
 
-            String soapmessage = String.format(envelope, sketchID, who, what, why);
+            String soapmessage = String.format(envelope, sketchID, Util.encode(who), Util.encode(what), Util.encode(why));
 
             HttpPost httpPost = new HttpPost(Constant.URL);
             StringEntity entity;

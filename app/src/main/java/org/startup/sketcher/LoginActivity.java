@@ -219,8 +219,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         write(Constant.SHARED_KEY.Key_Password, password);
                         write(Constant.SHARED_KEY.Key_IsRememberUser, "true");
                     } else {
-                        write(Constant.SHARED_KEY.Key_UserName, "");
-                        write(Constant.SHARED_KEY.Key_Password, "");
+                        write(Constant.SHARED_KEY.Key_UserName, username);
+                        write(Constant.SHARED_KEY.Key_Password, password);
                         write(Constant.SHARED_KEY.Key_IsRememberUser, "false");
                     }
 
